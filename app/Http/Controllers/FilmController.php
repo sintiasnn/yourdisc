@@ -2,63 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Film;
 use Illuminate\Http\Request;
 
 class FilmController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $films = Film::latest()->paginate(10);
+        return view('films.index', compact('films'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('films.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'code' => 'required|unique:films,code',
+            'title' => 'required',
+            'genre' => 'nullable',
+            'year' => 'nullable|numeric',
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        Film::create($request->all());
+        return redirect()->route('films.index')->with('success', 'Film created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Film $film)
     {
-        //
+        return view('films.edit', compact('film'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Film $film)
     {
-        //
+        $request->validate([
+            'code' => 'required|unique:films,code,' . $film->id,
+            'title' => 'required',
+            'genre' => 'nullable',
+            'year' => 'nullable|numeric',
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        $film->update($request->all());
+        return redirect()->route('films.index')->with('success', 'Film updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Film $film)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $film->delete();
+        return redirect()->route('films.index')->with('success', 'Film deleted successfully.');
     }
 }
