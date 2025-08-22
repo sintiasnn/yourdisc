@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: yourdisc-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yourdisc
+      MYSQL_USER: yourdisc
+      MYSQL_PASSWORD: yourdisc
+    ports:
+      - "3307:3306"
+    volumes:
+      - yourdisc-dbdata:/var/lib/mysql
+    networks:
+      - internal
+
+volumes:
+  yourdisc-dbdata:
+
+networks:
+  internal:
