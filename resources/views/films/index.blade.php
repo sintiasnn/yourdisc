@@ -17,7 +17,6 @@
             <tr>
                 <th>Judul</th>
                 <th>Genre</th>
-                <th>Durasi</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -26,7 +25,6 @@
     <tr>
         <td>{{ $film->title }}</td>
         <td>{{ $film->genre }}</td>
-        <td>menit</td>
         <td>
             <a href="{{ route('films.edit', $film->id) }}">Edit</a>
             <form action="{{ route('films.destroy', $film->id) }}" method="POST" style="display:inline;">

@@ -21,37 +21,43 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode' => 'required|unique:films,kode',
-            'judul' => 'required',
-            'genre' => 'required',
-            'tahun' => 'required|integer',
-            'stok' => 'required|integer|min:0',
+            'code' => 'required|string',
+            'title' => 'required|string',
+            'genre' => 'nullable|string',
+            'year' => 'required|integer',
+            'stock' => 'required|integer|min:0',
         ]);
 
         Film::create($validated);
 
-        return redirect()->route('films.index')->with('success', 'Film berhasil ditambahkan!');
+        return redirect()->route('films.index')->with('success', 'Film berhasil ditambahkan.');
     }
+
 
     public function edit(Film $film)
     {
         return view('films.edit', compact('film'));
     }
 
-    public function update(Request $request, Film $film)
+    public function update(Request $request, $id)
     {
+        $film = Film::findOrFail($id);
+
+        // Tambahkan ini untuk validasi dan menyimpan ke variabel $validated
         $validated = $request->validate([
-            'kode' => 'required|unique:films,kode,' . $film->id,
-            'judul' => 'required',
-            'genre' => 'required',
-            'tahun' => 'required|integer',
-            'stok' => 'required|integer|min:0',
+            'code' => 'required|string',
+            'title' => 'required|string',
+            'genre' => 'nullable|string',
+            'year' => 'required|integer',
+            'stock' => 'required|integer|min:0',
         ]);
 
+        // Gunakan hasil validasi untuk update
         $film->update($validated);
 
-        return redirect()->route('films.index')->with('success', 'Film berhasil diperbarui!');
+        return redirect()->route('films.index')->with('success', 'Film berhasil diperbarui.');
     }
+
 
 
     public function destroy(Film $film)
