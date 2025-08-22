@@ -20,16 +20,17 @@ class FilmController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'code' => 'required|unique:films,code',
-            'title' => 'required',
-            'genre' => 'nullable',
-            'year' => 'nullable|numeric',
-            'stock' => 'required|integer|min:0',
+        $validated = $request->validate([
+            'kode' => 'required|unique:films,kode',
+            'judul' => 'required',
+            'genre' => 'required',
+            'tahun' => 'required|integer',
+            'stok' => 'required|integer|min:0',
         ]);
 
-        Film::create($request->all());
-        return redirect()->route('films.index')->with('success', 'Film created successfully.');
+        Film::create($validated);
+
+        return redirect()->route('films.index')->with('success', 'Film berhasil ditambahkan!');
     }
 
     public function edit(Film $film)
@@ -39,17 +40,19 @@ class FilmController extends Controller
 
     public function update(Request $request, Film $film)
     {
-        $request->validate([
-            'code' => 'required|unique:films,code,' . $film->id,
-            'title' => 'required',
-            'genre' => 'nullable',
-            'year' => 'nullable|numeric',
-            'stock' => 'required|integer|min:0',
+        $validated = $request->validate([
+            'kode' => 'required|unique:films,kode,' . $film->id,
+            'judul' => 'required',
+            'genre' => 'required',
+            'tahun' => 'required|integer',
+            'stok' => 'required|integer|min:0',
         ]);
 
-        $film->update($request->all());
-        return redirect()->route('films.index')->with('success', 'Film updated successfully.');
+        $film->update($validated);
+
+        return redirect()->route('films.index')->with('success', 'Film berhasil diperbarui!');
     }
+
 
     public function destroy(Film $film)
     {

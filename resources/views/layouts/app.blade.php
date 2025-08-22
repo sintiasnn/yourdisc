@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Laravel CRUD</title>
+    <title>Film CRUD</title>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="padding: 2rem;">
         @yield('content')
     </div>
 </body>
