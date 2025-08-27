@@ -12,7 +12,7 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => strtoupper($this->faker->unique()->bothify('MBR-###')),
+            'code' => 'MBR-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 6)),
             'name' => $this->faker->name(),
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
