@@ -15,16 +15,22 @@
     <table border="0" cellpadding="8">
         <thead>
             <tr>
+                <th>kode film</th>
                 <th>Judul</th>
                 <th>Genre</th>
+                <th>tahun release</th>
+                <th>stok</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
         @foreach ($films as $film)
     <tr>
+        <td>{{ $film->code }}</td>
         <td>{{ $film->title }}</td>
         <td>{{ $film->genre }}</td>
+        <td>{{ $film->year }}</td>
+        <td>{{ $film->stock }}</td>
         <td>
             <a href="{{ route('films.edit', $film->id) }}">Edit</a>
             <form action="{{ route('films.destroy', $film->id) }}" method="POST" style="display:inline;">
@@ -40,6 +46,6 @@
     </table>
 
     <div style="margin-top: 10px;">
-        {{ $films->links() }}
+        {{ $films->links('pagination::semantic-ui') }}
     </div>
 @endsection

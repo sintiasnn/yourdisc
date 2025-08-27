@@ -11,6 +11,7 @@
                 <th>Nama</th>
                 <th>No. telpon</th>
                 <th>alamat</th>
+                <th>aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -32,4 +33,7 @@
             @endforeach
         </tbody>
     </table>
+    <div style="margin-top: 10px;">
+        {{ $members->links('pagination::semantic-ui') }}
+    </div>
 @endsection
