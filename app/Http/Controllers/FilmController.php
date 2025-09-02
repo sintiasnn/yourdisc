@@ -21,7 +21,7 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'required|string',
+            'code' => 'required|string|unique:films,code',
             'title' => 'required|string',
             'genre' => 'nullable|string',
             'year' => 'required|integer',
@@ -45,7 +45,7 @@ class FilmController extends Controller
 
         // Tambahkan ini untuk validasi dan menyimpan ke variabel $validated
         $validated = $request->validate([
-            'code' => 'required|string',
+            'code' => 'required|string|unique:films,code,' . $film->id,
             'title' => 'required|string',
             'genre' => 'nullable|string',
             'year' => 'required|integer',

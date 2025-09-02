@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Film extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
-    protected $fillable = ['code', 'title', 'genre', 'year', 'stock'];
-
-    public function loanItems()
+    public function loanItems(): HasMany
     {
         return $this->hasMany(LoanItem::class);
     }
 }
-

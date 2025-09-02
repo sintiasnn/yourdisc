@@ -10,6 +10,7 @@ class MemberController extends Controller
     public function index()
     {
         $members = Member::latest()->paginate(10);
+
         return view('members.index', compact('members'));
     }
 
@@ -27,6 +28,12 @@ class MemberController extends Controller
         ]);
         $randomCode = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
         $validated['code'] = 'MBR-' . $randomCode;
+
+        // Pastikan kode unik (sejalan dengan unique index di DB)
+        while (\App\Models\Member::where('code', $validated['code'])->exists()) {
+            $randomCode = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
+            $validated['code'] = 'MBR-' . $randomCode;
+        }
 
         Member::create($validated);
 

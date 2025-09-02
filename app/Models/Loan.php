@@ -4,27 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Loan extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
-    protected $fillable = ['member_id', 'loan_date', 'due_date', 'returned_at', 'status'];
-
-    protected $casts = [
-        'loan_date' => 'date',
-        'due_date' => 'date',
-        'returned_at' => 'datetime',
-    ];
-
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function items()
+    public function loanItems(): HasMany
     {
         return $this->hasMany(LoanItem::class);
     }
 }
-

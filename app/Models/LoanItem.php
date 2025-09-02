@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LoanItem extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
-    protected $fillable = ['loan_id', 'film_id', 'qty', 'returned_qty'];
-
-    public function loan()
+    public function loan(): BelongsTo
     {
         return $this->belongsTo(Loan::class);
     }
 
-    public function film()
+    public function film(): BelongsTo
     {
         return $this->belongsTo(Film::class);
     }
