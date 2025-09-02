@@ -33,7 +33,7 @@
         <td>{{ $film->stock }}</td>
         <td>
             <a href="{{ route('films.edit', $film->id) }}">Edit</a>
-            <form action="{{ route('films.destroy', $film->id) }}" method="POST" style="display:inline;">
+            <form action="{{ route('films.destroy', $film->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus film ini?');">
                 @csrf
                 @method('DELETE')
                 <button type="submit">Hapus</button>

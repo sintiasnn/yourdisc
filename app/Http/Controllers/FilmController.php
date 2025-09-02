@@ -20,11 +20,12 @@ class FilmController extends Controller
 
     public function store(Request $request)
     {
+        $currentYear = (int) date('Y');
         $validated = $request->validate([
             'code' => 'required|string|unique:films,code',
             'title' => 'required|string',
             'genre' => 'nullable|string',
-            'year' => 'required|integer',
+            'year' => 'required|integer|min:1900|max:' . $currentYear,
             'stock' => 'required|integer|min:0',
         ]);
 
@@ -44,11 +45,12 @@ class FilmController extends Controller
         $film = Film::findOrFail($id);
 
         // Tambahkan ini untuk validasi dan menyimpan ke variabel $validated
+        $currentYear = (int) date('Y');
         $validated = $request->validate([
             'code' => 'required|string|unique:films,code,' . $film->id,
             'title' => 'required|string',
             'genre' => 'nullable|string',
-            'year' => 'required|integer',
+            'year' => 'required|integer|min:1900|max:' . $currentYear,
             'stock' => 'required|integer|min:0',
         ]);
 
@@ -62,7 +64,19 @@ class FilmController extends Controller
 
     public function destroy(Film $film)
     {
+        // Cegah hapus jika ada loan aktif (status PENDING)
+        $hasActiveLoan = $film->loanItems()
+            ->whereHas('loan', function ($q) {
+                $q->where('status', 'PENDING');
+            })
+            ->exists();
+
+        if ($hasActiveLoan) {
+            return redirect()->route('films.index')
+                ->with('error', 'Tidak dapat menghapus film yang sedang dipinjam.');
+        }
+
         $film->delete();
-        return redirect()->route('films.index')->with('success', 'Film deleted successfully.');
+        return redirect()->route('films.index')->with('success', 'Film berhasil dihapus.');
     }
 }

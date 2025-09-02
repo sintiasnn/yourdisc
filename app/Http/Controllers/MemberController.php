@@ -60,6 +60,14 @@ class MemberController extends Controller
 
     public function destroy(Member $member)
     {
+        // Cegah hapus jika ada loan aktif (status PENDING)
+        $hasActiveLoan = $member->loans()->where('status', 'PENDING')->exists();
+
+        if ($hasActiveLoan) {
+            return redirect()->route('members.index')
+                ->with('error', 'Tidak dapat menghapus member dengan peminjaman aktif.');
+        }
+
         $member->delete();
         return redirect()->route('members.index')->with('success', 'Member berhasil dihapus.');
     }

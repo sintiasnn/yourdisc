@@ -84,6 +84,9 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    // Lama pinjam default (hari)
+    'loan_default_days' => env('LOAN_DEFAULT_DAYS', 7),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

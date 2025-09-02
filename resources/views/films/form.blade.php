@@ -17,6 +17,7 @@
         value="{{ old('code', $film->code ?? '') }}"
         required
     >
+    @error('code') <div style="color:red;">{{ $message }}</div> @enderror
 </div>
 
 <div style="margin-bottom: 1rem;">
@@ -28,6 +29,7 @@
         value="{{ old('title', $film->title ?? '') }}"
         required
     >
+    @error('title') <div style="color:red;">{{ $message }}</div> @enderror
 </div>
 
 <div style="margin-bottom: 1rem;">
@@ -38,6 +40,7 @@
         id="genre"
         value="{{ old('genre', $film->genre ?? '') }}"
     >
+    @error('genre') <div style="color:red;">{{ $message }}</div> @enderror
 </div>
 
 <div style="margin-bottom: 1rem;">
@@ -49,7 +52,9 @@
         min="1900"
         max="{{ now()->year }}"
         value="{{ old('year', $film->year ?? '') }}"
+        required
     >
+    @error('year') <div style="color:red;">{{ $message }}</div> @enderror
 </div>
 
 <div style="margin-bottom: 1rem;">
@@ -62,4 +67,5 @@
         value="{{ old('stock', $film->stock ?? 0) }}"
         required
     >
+    @error('stock') <div style="color:red;">{{ $message }}</div> @enderror
 </div>

@@ -9,7 +9,12 @@
         <div class="card-body">
             <p><strong>Member:</strong> {{ $loan->member->name }} ({{ $loan->member->code }})</p>
             <p><strong>Tanggal Pinjam:</strong> {{ $loan->loan_date }}</p>
-            <p><strong>Tanggal Kembali:</strong> {{ $loan->return_date ?? 'Belum dikembalikan' }}</p>
+            <p><strong>Jatuh Tempo:</strong> {{ $loan->due_date }}
+                @if ($loan->status === 'PENDING' && \Carbon\Carbon::parse($loan->due_date)->isPast())
+                    <span class="badge bg-danger ms-2">OVERDUE</span>
+                @endif
+            </p>
+            <p><strong>Tanggal Kembali:</strong> {{ $loan->returned_at ?? 'Belum dikembalikan' }}</p>
             <p><strong>Status:</strong> {{ $loan->status }}</p>
         </div>
     </div>
@@ -41,7 +46,7 @@
     <div class="mt-4 d-flex justify-content-between">
         <a href="{{ route('loans.index') }}" class="btn btn-secondary">Kembali ke Daftar</a>
 
-        @if ($loan->status === 'BORROWED')
+        @if ($loan->status === 'PENDING')
             <form action="{{ route('loans.return', $loan->id) }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-success">Tandai Sudah Kembali</button>

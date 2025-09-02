@@ -16,9 +16,27 @@ class LoanController extends Controller
      */
     public function index()
     {
-        $loans = Loan::with('member')->latest()->paginate(10);
+        $query = Loan::with('member')->latest();
 
-        return view('loans.index', compact('loans'));
+        // Filter status: PENDING, RETURNED, OVERDUE (turunan)
+        if (request()->filled('status')) {
+            $status = request('status');
+            if ($status === 'OVERDUE') {
+                $query->where('status', 'PENDING')->whereDate('due_date', '<', now()->toDateString());
+            } elseif (in_array($status, ['PENDING', 'RETURNED'])) {
+                $query->where('status', $status);
+            }
+        }
+
+        // Filter member
+        if (request()->filled('member_id')) {
+            $query->where('member_id', request('member_id'));
+        }
+
+        $loans = $query->paginate(10)->appends(request()->query());
+        $members = Member::orderBy('name')->get(['id','name']);
+
+        return view('loans.index', compact('loans','members'));
     }
 
     /**
@@ -46,10 +64,13 @@ class LoanController extends Controller
 
         try {
             DB::transaction(function () use ($validated) {
+                $days = (int) config('app.loan_default_days', 7);
+                $dueDate = Carbon::parse($validated['loan_date'])->addDays($days)->toDateString();
                 $loan = Loan::create([
                     'member_id' => $validated['member_id'],
                     'loan_date' => $validated['loan_date'],
-                    'status' => 'BORROWED',
+                    'due_date' => $dueDate,
+                    'status' => 'PENDING',
                 ]);
 
                 foreach ($validated['film_ids'] as $film_id) {
@@ -109,7 +130,7 @@ class LoanController extends Controller
 
     public function return(Loan $loan)
     {
-        if ($loan->status !== 'BORROWED') {
+        if ($loan->status !== 'PENDING') {
             return redirect()->route('loans.show', $loan->id)->with('error', 'Peminjaman ini tidak dapat dikembalikan.');
         }
 
@@ -118,7 +139,7 @@ class LoanController extends Controller
                 $loan->load('loanItems.film');
                 $loan->update([
                     'status' => 'RETURNED',
-                    'return_date' => Carbon::now(),
+                    'returned_at' => Carbon::now(),
                 ]);
 
                 foreach ($loan->loanItems as $item) {

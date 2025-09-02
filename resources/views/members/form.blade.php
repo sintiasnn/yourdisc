@@ -16,12 +16,12 @@
 
 <div style="margin-bottom: 1rem;">
     <label for="phone">No.Telpon</label><br>
-    <input type="phone" name="phone" id="phone" value="{{ old('phone', $member->phone ?? '') }}" required>
+    <input type="text" name="phone" id="phone" value="{{ old('phone', $member->phone ?? '') }}">
     @error('phone') <div style="color:red;">{{ $message }}</div> @enderror
 </div>
 
 <div style="margin-bottom: 1rem;">
-    <label for="address">alamat</label><br>
-    <input type="address" name="address" id="address" value="{{ old('address', $member->address ?? '') }}" required>
+    <label for="address">Alamat</label><br>
+    <input type="text" name="address" id="address" value="{{ old('address', $member->address ?? '') }}">
     @error('address') <div style="color:red;">{{ $message }}</div> @enderror
 </div>
